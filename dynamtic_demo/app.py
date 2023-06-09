@@ -1,10 +1,11 @@
 from typing import Annotated, Optional
 
 from dynamtic import Dynamtic
-from dynamtic.dynamtic_item import DynamticItem, DynamticKey
+from dynamtic.models.dynamtic_item import DynamticItem, DynamticKey
 
 from models.color import Color
 from models.demo_item import DemoItem
+
 
 # Dynamtic is an initiative to combine the DynamoDB boto3 client with the Pydantic model.
 
@@ -71,19 +72,7 @@ print(dynamodb.scan())
 # Paging - shown in unit tests in dynamtic library
 
 # CDK
-# get table definition
-pk_name, pk_type = DemoItem.get_table_definition(DynamticKey.PARTITION_KEY)
-sk_name, sk_type = DemoItem.get_table_definition(DynamticKey.SORT_KEY)
-
-user_activity_table = Table(
-    self,
-    "Table",
-    # partition_key=aws_dynamodb.Attribute(
-    #     name="tenant_id", type=aws_dynamodb.AttributeType.STRING
-    # ),
-    partition_key=Attribute(name=pk_name, type=AttributeType(pk_type)),
-    sort_key=Attribute(name=sk_name, type=AttributeType(sk_type)),
-)
+# get table definition - look in the CDK folder
 
 # TODOs:
 # - documentation

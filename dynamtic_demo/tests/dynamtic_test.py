@@ -3,7 +3,7 @@ import unittest
 from dynamtic import Dynamtic
 from moto import mock_dynamodb
 
-from dynamtic_demo.models.demo_item import DemoItem
+from models.demo_item import DemoItem
 
 
 @mock_dynamodb

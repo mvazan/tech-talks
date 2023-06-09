@@ -1,6 +1,6 @@
-from dynamtic.dynamtic_item import DynamticKey
+from dynamtic.models.dynamtic_item import DynamticKey
 
-from dynamtic_demo.models.demo_item import DemoItem
+from models.demo_item import DemoItem
 
 def test_get_person_table_definition():
     expected_pk_definition = ("tenant_id", "STRING",)
