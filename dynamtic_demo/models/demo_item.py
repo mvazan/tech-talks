@@ -4,6 +4,7 @@ from dynamtic.models.dynamtic_item import DynamticItem, DynamticKey
 
 from models.color import Color
 
+
 class DemoItem(DynamticItem):
     tenant_id: Annotated[str, DynamticKey.PARTITION_KEY]
     user_id: Annotated[int, DynamticKey.SORT_KEY]

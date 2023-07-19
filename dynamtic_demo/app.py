@@ -13,6 +13,7 @@ from models.demo_item import DemoItem
 # Can't instantiate base DynamticItem class
 DynamticItem()
 
+
 # Is annotated with a single partition key
 class NoPKItem(DynamticItem):
     tenant_id: str
@@ -21,7 +22,9 @@ class NoPKItem(DynamticItem):
     value2: Optional[int] = None
     shoe_color: Optional[Color] = None
 
+
 item = NoPKItem(tenant_id="tenant1", user_id=1)
+
 
 class MultiplePKsItem(DynamticItem):
     tenant_id: Annotated[str, DynamticKey.PARTITION_KEY]
@@ -30,7 +33,9 @@ class MultiplePKsItem(DynamticItem):
     value2: Optional[int] = None
     shoe_color: Optional[Color] = None
 
+
 item = MultiplePKsItem(tenant_id="tenant1", user_id=1, value1="value1")
+
 
 # Is not annotated with multiple sort keys
 class MultipleSKsItem(DynamticItem):
@@ -39,6 +44,7 @@ class MultipleSKsItem(DynamticItem):
     value1: Annotated[str, DynamticKey.SORT_KEY]
     value2: Optional[int] = None
     shoe_color: Optional[Color] = None
+
 
 item = MultipleSKsItem(tenant_id="tenant1", user_id=1, value1="value1")
 
@@ -76,13 +82,17 @@ print(dynamodb.scan())
 
 # TODOs:
 # - documentation
-#   - which set of privileges is needed by ie lambda to fully utilize all features of this module, ie.: dynamodb::GetItem, dynamodb::PutItem etc...so that users don't run into issues when they did not expect that this privilege had to be granted to their lambda because they are just users of this wrapper
+#   - which set of privileges is needed by ie lambda to fully utilize all features of this module,
+#       ie.: dynamodb::GetItem, dynamodb::PutItem etc...so that users don't run into issues
+#       when they did not expect that this privilege had to be granted to their lambda
+#       because they are just users of this wrapper
 # - make the library first version available to use
 # - use generics to improve the GET function signature
 # - add more optional attributes to CRUD functions
 # - add support for "private" parameters (ignoring DB IO operations)
 # - add index support
-# - dynamtic's region: remove this or make the default None, boto3 should be aware on what region you are based on which region the lambda's deployed to
-# - dynamtic's attributes: mark those as protected/private if they're not supposed to be used from outside the class please
-# - instead of root validators, it would make sense to trigger those checks during class creation (metaclass __new__ i believe)
-# otherwise this runs during every instance creationpip install twine
+# - dynamtic's region: remove this or make the default None,
+#       boto3 should be aware on what region you are based on which region the lambda's deployed to
+# - dynamtic's attributes: mark those as protected/private if they're not supposed to be used from outside the class
+# - trigger checks during class creation (metaclass __new__ i believe) instead of root validators
+# otherwise this runs during every instance creation
