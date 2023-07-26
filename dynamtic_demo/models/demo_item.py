@@ -1,6 +1,6 @@
 from typing import Annotated, Optional
 
-from dynamtic.models.dynamtic_item import DynamticItem, DynamticKey
+from dynamtic.models import DynamticItem, DynamticKey
 
 from models.color import Color
 

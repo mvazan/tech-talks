@@ -1,13 +1,14 @@
+import logging
 from typing import Annotated, Optional
 
 from dynamtic import Dynamtic
-from dynamtic.models.dynamtic_item import DynamticItem, DynamticKey
+from dynamtic.models import DynamticItem, DynamticKey
 
 from models.color import Color
 from models.demo_item import DemoItem
 
-
 # Dynamtic is an initiative to combine the DynamoDB boto3 client with the Pydantic model.
+logging.basicConfig(level=logging.INFO)
 
 # Model validation:
 # Can't instantiate base DynamticItem class
@@ -23,18 +24,12 @@ class NoPKItem(DynamticItem):
     shoe_color: Optional[Color] = None
 
 
-item = NoPKItem(tenant_id="tenant1", user_id=1)
-
-
 class MultiplePKsItem(DynamticItem):
     tenant_id: Annotated[str, DynamticKey.PARTITION_KEY]
     user_id: Annotated[int, DynamticKey.SORT_KEY]
     value1: Annotated[str, DynamticKey.PARTITION_KEY]
     value2: Optional[int] = None
     shoe_color: Optional[Color] = None
-
-
-item = MultiplePKsItem(tenant_id="tenant1", user_id=1, value1="value1")
 
 
 # Is not annotated with multiple sort keys
@@ -45,8 +40,6 @@ class MultipleSKsItem(DynamticItem):
     value2: Optional[int] = None
     shoe_color: Optional[Color] = None
 
-
-item = MultipleSKsItem(tenant_id="tenant1", user_id=1, value1="value1")
 
 # Database actions:
 dynamodb = Dynamtic(DemoItem, "mvazan-dynamtic-demo")
@@ -70,7 +63,7 @@ item_tenant1_user_2 = DemoItem(tenant_id="tenant1", user_id=2, value1="value1", 
 dynamodb.put(item_tenant1_user_2)
 item_tenant2_user_1 = DemoItem(tenant_id="tenant2", user_id=1, value1="value1", value2=2, shoe_color=Color.RED)
 dynamodb.put(item_tenant2_user_1)
-print(dynamodb.query_by_partition_key(partition_key_value="tenant1"))
+print(dynamodb.query(partition_key_value="tenant1"))
 
 # SCAN the entire DynamoDB table and return all items as a list.
 print(dynamodb.scan())
@@ -80,19 +73,4 @@ print(dynamodb.scan())
 # CDK
 # get table definition - look in the CDK folder
 
-# TODOs:
-# - documentation
-#   - which set of privileges is needed by ie lambda to fully utilize all features of this module,
-#       ie.: dynamodb::GetItem, dynamodb::PutItem etc...so that users don't run into issues
-#       when they did not expect that this privilege had to be granted to their lambda
-#       because they are just users of this wrapper
-# - make the library first version available to use
-# - use generics to improve the GET function signature
-# - add more optional attributes to CRUD functions
-# - add support for "private" parameters (ignoring DB IO operations)
-# - add index support
-# - dynamtic's region: remove this or make the default None,
-#       boto3 should be aware on what region you are based on which region the lambda's deployed to
-# - dynamtic's attributes: mark those as protected/private if they're not supposed to be used from outside the class
-# - trigger checks during class creation (metaclass __new__ i believe) instead of root validators
-# otherwise this runs during every instance creation
+# TODOs: https://github.com/blackboard-foundations/dynamtic-lib/tree/v0.3.5#future-improvements
